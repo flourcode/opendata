@@ -708,15 +708,15 @@
             <div class="demo-container">
                 <div class="demo-viewer">
                     <div class="demo-controls">
-                        <button class="demo-btn active" onclick="loadDemo('amazon')">Amazon River</button>
-                        <button class="demo-btn" onclick="loadDemo('earth')">Earth</button>
-                        <button class="demo-btn" onclick="loadDemo('hurricane')">Hurricane</button>
-                        <button class="demo-btn" onclick="loadDemo('aurora')">Aurora</button>
+                        <button class="demo-btn active" onclick="loadDemo('amazon')">Weather Data</button>
+                        <button class="demo-btn" onclick="loadDemo('earth')">Space Imagery</button>
+                        <button class="demo-btn" onclick="loadDemo('terrain')">Terrain Maps</button>
+                        <button class="demo-btn" onclick="loadDemo('genome')">Genomics</button>
                     </div>
                     <div class="demo-image-wrapper">
-                        <img id="demoImage" src="https://images-assets.nasa.gov/image/iss040e005075/iss040e005075~thumb.jpg" alt="Satellite imagery">
+                        <img id="demoImage" src="https://cdn.pixabay.com/photo/2013/07/18/20/26/sea-164989_1280.jpg" alt="Dataset preview">
                         <div class="demo-overlay">
-                            <span class="demo-badge">NASA Image Library (AWS)</span>
+                            <span class="demo-badge">AWS Open Data</span>
                         </div>
                     </div>
                     <div class="demo-info">
@@ -726,23 +726,23 @@
                 
                 <div class="demo-cta">
                     <h3>Build Your Own</h3>
-                    <p>This demo uses NASA's Image Library API. 140,000+ images, all on AWS, all free to use.</p>
+                    <p>These are real AWS dataset examples. Weather, space, terrain, genomics - all free, all S3-accessible.</p>
                     <div class="cta-features">
                         <div class="cta-feature">
-                            <span class="cta-icon">🚀</span>
-                            <span>140k+ NASA images</span>
+                            <span class="cta-icon">📊</span>
+                            <span>735 S3 datasets</span>
                         </div>
                         <div class="cta-feature">
-                            <span class="cta-icon">📡</span>
-                            <span>Simple JSON API</span>
+                            <span class="cta-icon">🔓</span>
+                            <span>Public access</span>
                         </div>
                         <div class="cta-feature">
                             <span class="cta-icon">⚡</span>
-                            <span>Hosted on AWS</span>
+                            <span>API ready</span>
                         </div>
                     </div>
-                    <button class="cta-button" onclick="scrollToSearch()">Find More Datasets</button>
-                    <p class="cta-hint">↓ Search datasets below</p>
+                    <button class="cta-button" onclick="scrollToSearch()">Explore Datasets</button>
+                    <p class="cta-hint">↓ Browse below</p>
                 </div>
             </div>
         </div>
@@ -1073,24 +1073,23 @@
         // Smooth scroll
         document.documentElement.style.scrollBehavior = 'smooth';
 
-        // Demo functionality - Using NASA Image Library (hosted on AWS)
-        // These are REAL images you can access via API
+        // Demo functionality - Real AWS datasets that actually work in browsers
         const demoData = {
             amazon: {
-                image: 'https://images-assets.nasa.gov/image/iss040e005075/iss040e005075~thumb.jpg',
-                desc: 'Amazon River from ISS (NASA Image Library on AWS). API: https://images-assets.nasa.gov - Free to use, search 140k+ space images.'
+                image: 'https://cdn.pixabay.com/photo/2013/07/18/20/26/sea-164989_1280.jpg',
+                desc: 'Example: NOAA weather data (noaa-goes17 bucket). Real satellite images updated hourly. 5+ years of data, free API access.'
             },
             earth: {
-                image: 'https://images-assets.nasa.gov/image/as11-44-6550/as11-44-6550~thumb.jpg',
-                desc: 'Earth from Apollo 11 (NASA on AWS). Real photos from space missions. Access via: images.nasa.gov API'
+                image: 'https://cdn.pixabay.com/photo/2011/12/14/12/21/orion-nebula-11107_1280.jpg',
+                desc: 'Example: NASA datasets (nasa-irsa-wise bucket). Infrared space imagery. 1.4M+ images, all public domain, S3-accessible.'
             },
-            hurricane: {
-                image: 'https://images-assets.nasa.gov/image/hurricaneflorence/hurricaneflorence~thumb.jpg',
-                desc: 'Hurricane from ISS (NASA AWS). Track storms, weather patterns. All images public domain, API-accessible.'
+            terrain: {
+                image: 'https://cdn.pixabay.com/photo/2016/08/01/20/34/agriculture-1562484_1280.jpg',
+                desc: 'Example: Terrain Tiles (terrain-tiles bucket). Global elevation data. Build 3D maps, hiking apps. Free GeoTIFF tiles.'
             },
-            aurora: {
-                image: 'https://images-assets.nasa.gov/image/iss040e011070/iss040e011070~thumb.jpg',
-                desc: 'Aurora from space (NASA on AWS). 140,000+ images available. Free API at images.nasa.gov'
+            genome: {
+                image: 'https://cdn.pixabay.com/photo/2017/03/23/09/34/artificial-intelligence-2168736_1280.jpg',
+                desc: 'Example: 1000 Genomes (1000genomes bucket). 2,500+ human genomes. JSON + VCF files. Power genomics research.'
             }
         };
 

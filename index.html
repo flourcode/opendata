@@ -394,6 +394,21 @@
             color: rgba(255, 255, 255, 0.4);
         }
 
+        .card-link-hint {
+            font-size: 11px;
+            color: #007aff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .card-link-hint {
+            opacity: 1;
+        }
+
         /* Loading State */
         .loading {
             display: none;
@@ -825,6 +840,7 @@
                     <span class="card-provider">${provider}</span>
                     ${dataset.UpdateFrequency ? `<span class="card-update">${dataset.UpdateFrequency}</span>` : ''}
                 </div>
+                <div class="card-link-hint">Click to access →</div>
             `;
             
             card.addEventListener('click', () => showDatasetDetails(dataset));
@@ -834,18 +850,32 @@
 
         // Show dataset details
         function showDatasetDetails(dataset) {
-            const details = `
-Dataset: ${dataset.Name}
-Type: ${dataset.Type}
-Region: ${dataset.Region || 'N/A'}
-Managed By: ${dataset.ManagedBy || 'N/A'}
-Update Frequency: ${dataset.UpdateFrequency || 'N/A'}
-License: ${dataset.License || 'N/A'}
-ARN: ${dataset.ARN || 'N/A'}
-${dataset.Documentation ? '\nDocumentation: ' + dataset.Documentation : ''}
-            `.trim();
+            // Try to find the actual dataset URL
+            let datasetUrl = null;
             
-            alert(details);
+            if (dataset.ARN && dataset.ARN.includes('s3:::')) {
+                // Extract bucket name from ARN
+                const bucketName = dataset.ARN.split('s3:::')[1];
+                datasetUrl = `https://s3.console.aws.amazon.com/s3/buckets/${bucketName}`;
+            }
+            
+            // Check for explore links
+            if (dataset.Explore && Array.isArray(dataset.Explore) && dataset.Explore.length > 0) {
+                const exploreLink = dataset.Explore[0];
+                const match = exploreLink.match(/\(([^)]+)\)/);
+                if (match) {
+                    datasetUrl = match[1];
+                }
+            }
+            
+            // Open the dataset URL
+            if (datasetUrl) {
+                window.open(datasetUrl, '_blank');
+            } else if (dataset.Documentation) {
+                window.open(dataset.Documentation, '_blank');
+            } else {
+                alert('No direct link available for this dataset.\n\nARN: ' + (dataset.ARN || 'N/A'));
+            }
         }
 
         // Mouse move effect

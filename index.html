@@ -714,9 +714,9 @@
                         <button class="demo-btn" onclick="loadDemo('australia')">Great Barrier Reef</button>
                     </div>
                     <div class="demo-image-wrapper">
-                        <img id="demoImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Amazon_CIAT_%282%29.jpg/800px-Amazon_CIAT_%282%29.jpg" alt="Satellite imagery">
+                        <img id="demoImage" src="https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/20/L/NP/2023/7/S2B_20LNP_20230715_0_L2A/TCI.tif" alt="Satellite imagery">
                         <div class="demo-overlay">
-                            <span class="demo-badge">Sentinel-2 Satellite Data</span>
+                            <span class="demo-badge">AWS: sentinel-cogs</span>
                         </div>
                     </div>
                     <div class="demo-info">
@@ -1073,23 +1073,23 @@
         // Smooth scroll
         document.documentElement.style.scrollBehavior = 'smooth';
 
-        // Demo functionality
+        // Demo functionality - Using actual Sentinel-2 imagery from AWS Open Data
         const demoData = {
             amazon: {
-                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Amazon_CIAT_%282%29.jpg/800px-Amazon_CIAT_%282%29.jpg',
-                desc: 'Amazon Rainforest from space. Track deforestation, biodiversity, and climate patterns using Sentinel-2 satellite data updated every 5 days.'
+                image: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/20/L/NP/2023/7/S2B_20LNP_20230715_0_L2A/TCI.tif',
+                desc: 'Amazon Rainforest from Sentinel-2 satellite (AWS: sentinel-cogs bucket). Real data updated every 5 days. Track deforestation and biodiversity.'
             },
             sahara: {
-                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Sahara_satellite_hires.jpg/800px-Sahara_satellite_hires.jpg',
-                desc: 'Sahara Desert—Earth\'s largest hot desert. Monitor sand dune movement, vegetation changes, and climate shifts with free satellite imagery.'
+                image: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/36/R/TU/2023/6/S2A_36RTU_20230618_0_L2A/TCI.tif',
+                desc: 'Sahara Desert from Sentinel-2 (AWS: sentinel-cogs). Monitor sand movement, vegetation, and climate shifts with free AWS satellite data.'
             },
             everest: {
-                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Mount_Everest_as_seen_from_Drukair2_PLW_edit.jpg/800px-Mount_Everest_as_seen_from_Drukair2_PLW_edit.jpg',
-                desc: 'Mount Everest and the Himalayas. Study glacial retreat, snow cover, and mountain ecosystems using multi-spectral satellite data.'
+                image: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/45/R/VL/2023/10/S2A_45RVL_20231015_0_L2A/TCI.tif',
+                desc: 'Himalayas from Sentinel-2 (AWS: sentinel-cogs bucket). Study glacial retreat, snow cover, and ecosystems using AWS open data.'
             },
             australia: {
-                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Great_Barrier_Reef_Aerial.jpg/800px-Great_Barrier_Reef_Aerial.jpg',
-                desc: 'Great Barrier Reef from above. Monitor coral health, ocean temperature, and ecosystem changes with NASA Landsat and Sentinel-2 data.'
+                image: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/55/K/DV/2023/8/S2B_55KDV_20230812_0_L2A/TCI.tif',
+                desc: 'Great Barrier Reef from Sentinel-2 (AWS: sentinel-cogs). Monitor coral health and ocean temperature with NASA/ESA data on AWS.'
             }
         };
 

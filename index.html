@@ -556,11 +556,9 @@
                 const response = await fetch('aws_open_datasets.json');
                 allDatasets = await response.json();
                 
-                // Remove duplicates and clean data
+                // Remove duplicates by name
                 allDatasets = allDatasets.filter((dataset, index, self) => {
-                    // Only keep S3 Bucket types (primary resources)
-                    return dataset.Type === 'S3 Bucket' &&
-                           index === self.findIndex(d => d.Name === dataset.Name);
+                    return index === self.findIndex(d => d.Name === dataset.Name);
                 });
                 
                 filteredDatasets = [...allDatasets];

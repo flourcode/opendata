@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Open Data Registry</title>
+    <title>Open Data Catalog</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -46,6 +46,14 @@
             color: #7a9478;
             font-weight: 400;
             margin-bottom: 12px;
+        }
+
+        .explainer {
+            font-size: 13px;
+            color: #5f7d5e;
+            font-weight: 400;
+            margin-bottom: 12px;
+            font-style: italic;
         }
 
         .dataset-count {
@@ -475,8 +483,9 @@
 <body>
     <div class="hero">
         <div class="container">
-            <h1>AWS Open Data Registry</h1>
-            <p class="subtitle">Search and access public datasets</p>
+            <h1>🪣 Open Data Bucket Catalog</h1>
+            <p class="subtitle">Search and access AWS public datasets</p>
+            <p class="explainer">S3 bucket datasets only. This site is not affiliated with AWS but makes their open data more accessible.</p>
             <p class="dataset-count" id="totalCount">Loading datasets...</p>
             
             <div class="search-container">
@@ -556,9 +565,10 @@
                 const response = await fetch('aws_open_datasets.json');
                 allDatasets = await response.json();
                 
-                // Remove duplicates by name
+                // Remove duplicates and keep only S3 Buckets (actual datasets)
                 allDatasets = allDatasets.filter((dataset, index, self) => {
-                    return index === self.findIndex(d => d.Name === dataset.Name);
+                    return dataset.Type === 'S3 Bucket' &&
+                           index === self.findIndex(d => d.Name === dataset.Name);
                 });
                 
                 filteredDatasets = [...allDatasets];

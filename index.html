@@ -708,15 +708,15 @@
             <div class="demo-container">
                 <div class="demo-viewer">
                     <div class="demo-controls">
-                        <button class="demo-btn active" onclick="loadDemo('amazon')">Amazon Rainforest</button>
-                        <button class="demo-btn" onclick="loadDemo('sahara')">Sahara Desert</button>
-                        <button class="demo-btn" onclick="loadDemo('everest')">Mt. Everest</button>
-                        <button class="demo-btn" onclick="loadDemo('australia')">Great Barrier Reef</button>
+                        <button class="demo-btn active" onclick="loadDemo('amazon')">Amazon River</button>
+                        <button class="demo-btn" onclick="loadDemo('earth')">Earth</button>
+                        <button class="demo-btn" onclick="loadDemo('hurricane')">Hurricane</button>
+                        <button class="demo-btn" onclick="loadDemo('aurora')">Aurora</button>
                     </div>
                     <div class="demo-image-wrapper">
-                        <img id="demoImage" src="https://titiler.xyz/cog/tiles/WebMercatorQuad/11/617/1281/assets?url=s3://sentinel-cogs/sentinel-s2-l2a-cogs/20/L/NP/2023/7/S2B_20LNP_20230715_0_L2A/TCI.tif" alt="Satellite imagery">
+                        <img id="demoImage" src="https://images-assets.nasa.gov/image/iss040e005075/iss040e005075~thumb.jpg" alt="Satellite imagery">
                         <div class="demo-overlay">
-                            <span class="demo-badge">AWS: sentinel-cogs</span>
+                            <span class="demo-badge">NASA Image Library (AWS)</span>
                         </div>
                     </div>
                     <div class="demo-info">
@@ -726,23 +726,23 @@
                 
                 <div class="demo-cta">
                     <h3>Build Your Own</h3>
-                    <p>This demo uses satellite imagery from AWS Open Data Registry. Free to access, free to use.</p>
+                    <p>This demo uses NASA's Image Library API. 140,000+ images, all on AWS, all free to use.</p>
                     <div class="cta-features">
                         <div class="cta-feature">
-                            <span class="cta-icon">🛰️</span>
-                            <span>50+ satellite datasets</span>
+                            <span class="cta-icon">🚀</span>
+                            <span>140k+ NASA images</span>
                         </div>
                         <div class="cta-feature">
-                            <span class="cta-icon">🌍</span>
-                            <span>Global coverage</span>
+                            <span class="cta-icon">📡</span>
+                            <span>Simple JSON API</span>
                         </div>
                         <div class="cta-feature">
                             <span class="cta-icon">⚡</span>
-                            <span>API ready</span>
+                            <span>Hosted on AWS</span>
                         </div>
                     </div>
-                    <button class="cta-button" onclick="scrollToSearch()">Find Satellite Data</button>
-                    <p class="cta-hint">↓ Search "Sentinel" or "Landsat" below</p>
+                    <button class="cta-button" onclick="scrollToSearch()">Find More Datasets</button>
+                    <p class="cta-hint">↓ Search datasets below</p>
                 </div>
             </div>
         </div>
@@ -1073,23 +1073,24 @@
         // Smooth scroll
         document.documentElement.style.scrollBehavior = 'smooth';
 
-        // Demo functionality - Using actual Sentinel-2 imagery from AWS Open Data via Titiler
+        // Demo functionality - Using NASA Image Library (hosted on AWS)
+        // These are REAL images you can access via API
         const demoData = {
             amazon: {
-                image: 'https://titiler.xyz/cog/tiles/WebMercatorQuad/11/617/1281/assets?url=s3://sentinel-cogs/sentinel-s2-l2a-cogs/20/L/NP/2023/7/S2B_20LNP_20230715_0_L2A/TCI.tif',
-                desc: 'Amazon Rainforest from Sentinel-2 satellite (AWS: sentinel-cogs bucket). Real data updated every 5 days. Track deforestation and biodiversity.'
+                image: 'https://images-assets.nasa.gov/image/iss040e005075/iss040e005075~thumb.jpg',
+                desc: 'Amazon River from ISS (NASA Image Library on AWS). API: https://images-assets.nasa.gov - Free to use, search 140k+ space images.'
             },
-            sahara: {
-                image: 'https://titiler.xyz/cog/tiles/WebMercatorQuad/10/596/448/assets?url=s3://sentinel-cogs/sentinel-s2-l2a-cogs/36/R/TU/2023/6/S2A_36RTU_20230618_0_L2A/TCI.tif',
-                desc: 'Sahara Desert from Sentinel-2 (AWS: sentinel-cogs). Monitor sand movement, vegetation, and climate shifts with free AWS satellite data.'
+            earth: {
+                image: 'https://images-assets.nasa.gov/image/as11-44-6550/as11-44-6550~thumb.jpg',
+                desc: 'Earth from Apollo 11 (NASA on AWS). Real photos from space missions. Access via: images.nasa.gov API'
             },
-            everest: {
-                image: 'https://titiler.xyz/cog/tiles/WebMercatorQuad/11/1480/789/assets?url=s3://sentinel-cogs/sentinel-s2-l2a-cogs/45/R/VL/2023/10/S2A_45RVL_20231015_0_L2A/TCI.tif',
-                desc: 'Himalayas from Sentinel-2 (AWS: sentinel-cogs bucket). Study glacial retreat, snow cover, and ecosystems using AWS open data.'
+            hurricane: {
+                image: 'https://images-assets.nasa.gov/image/hurricaneflorence/hurricaneflorence~thumb.jpg',
+                desc: 'Hurricane from ISS (NASA AWS). Track storms, weather patterns. All images public domain, API-accessible.'
             },
-            australia: {
-                image: 'https://titiler.xyz/cog/tiles/WebMercatorQuad/10/945/655/assets?url=s3://sentinel-cogs/sentinel-s2-l2a-cogs/55/K/DV/2023/8/S2B_55KDV_20230812_0_L2A/TCI.tif',
-                desc: 'Great Barrier Reef from Sentinel-2 (AWS: sentinel-cogs). Monitor coral health and ocean temperature with NASA/ESA data on AWS.'
+            aurora: {
+                image: 'https://images-assets.nasa.gov/image/iss040e011070/iss040e011070~thumb.jpg',
+                desc: 'Aurora from space (NASA on AWS). 140,000+ images available. Free API at images.nasa.gov'
             }
         };
 
@@ -1116,15 +1117,8 @@
         };
 
         window.scrollToSearch = function() {
-            searchInput.value = 'sentinel';
             searchInput.focus();
-            searchTerm = 'sentinel';
-            filterAndRender();
-            
-            // Scroll to results
-            setTimeout(() => {
-                document.querySelector('.popular-tags').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
+            document.querySelector('.popular-tags').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
     </script>
 </body>

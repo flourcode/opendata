@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Open Data Registry</title>
+    <title>Open Data Catalog</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -31,199 +31,6 @@
         .hero {
             padding: 80px 0 60px;
             border-bottom: 1px solid #1a2421;
-        }
-
-        /* Demo Section */
-        .demo-section {
-            padding: 80px 0;
-            border-bottom: 1px solid #1a2421;
-            background: #0f1412;
-        }
-
-        .demo-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .demo-header h2 {
-            font-size: 36px;
-            font-weight: 700;
-            color: #c8e6c9;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-
-        .demo-header p {
-            font-size: 16px;
-            color: #7a9478;
-        }
-
-        .demo-container {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 48px;
-            align-items: start;
-        }
-
-        .demo-viewer {
-            background: #0a0e0f;
-            border: 1px solid #1a2421;
-            padding: 24px;
-        }
-
-        .demo-controls {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: #1a2421;
-            border: 1px solid #1a2421;
-            margin-bottom: 24px;
-        }
-
-        .demo-btn {
-            padding: 12px 16px;
-            background: #0a0e0f;
-            border: none;
-            color: #7a9478;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .demo-btn:hover {
-            background: #0f1412;
-            color: #c8e6c9;
-        }
-
-        .demo-btn.active {
-            background: #1f3a2a;
-            color: #c8e6c9;
-        }
-
-        .demo-image-wrapper {
-            position: relative;
-            aspect-ratio: 16/10;
-            overflow: hidden;
-            background: #000000;
-            border: 1px solid #1a2421;
-        }
-
-        .demo-image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.9;
-        }
-
-        .demo-overlay {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-        }
-
-        .demo-badge {
-            padding: 6px 12px;
-            background: rgba(10, 14, 15, 0.9);
-            border: 1px solid #1a2421;
-            color: #c8e6c9;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .demo-info {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #1a2421;
-        }
-
-        .demo-info p {
-            font-size: 14px;
-            color: #7a9478;
-            line-height: 1.6;
-        }
-
-        .demo-cta {
-            background: #0a0e0f;
-            border: 1px solid #1a2421;
-            padding: 32px;
-        }
-
-        .demo-cta h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #c8e6c9;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-
-        .demo-cta > p {
-            font-size: 15px;
-            color: #7a9478;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-
-        .cta-features {
-            margin-bottom: 32px;
-        }
-
-        .cta-feature {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid #1a2421;
-            font-size: 14px;
-            color: #c8e6c9;
-        }
-
-        .cta-feature:last-child {
-            border-bottom: none;
-        }
-
-        .cta-icon {
-            font-size: 20px;
-        }
-
-        .cta-button {
-            width: 100%;
-            padding: 16px;
-            background: #1f3a2a;
-            border: 1px solid #4a6850;
-            color: #c8e6c9;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.15s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .cta-button:hover {
-            background: #2a4a3a;
-            border-color: #5a7860;
-        }
-
-        .cta-hint {
-            text-align: center;
-            font-size: 12px;
-            color: #5f7d5e;
-            margin-top: 12px;
-        }
-
-        @media (max-width: 968px) {
-            .demo-container {
-                grid-template-columns: 1fr;
-            }
-
-            .demo-controls {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
 
         h1 {
@@ -676,9 +483,9 @@
 <body>
     <div class="hero">
         <div class="container">
-            <h1>AWS Open Data Registry</h1>
-            <p class="subtitle">Search and access public datasets</p>
-            <p class="explainer">S3 bucket datasets only. Not affiliated with AWS—built to make open data more accessible.</p>
+            <h1>Open Dataset Buckets</h1>
+            <p class="subtitle">Makeing AWS open datasets easier to access and use.</p>
+            <p class="explainer">S3 bucket datasets only. This site is not affiliated with AWS.</p>
             <p class="dataset-count" id="totalCount">Loading datasets...</p>
             
             <div class="search-container">
@@ -692,57 +499,6 @@
                         placeholder="Search datasets..."
                         autocomplete="off"
                     >
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Featured Demo Section -->
-    <div class="demo-section">
-        <div class="container">
-            <div class="demo-header">
-                <h2>See What's Possible</h2>
-                <p>Interactive satellite imagery viewer built with AWS open data</p>
-            </div>
-            
-            <div class="demo-container">
-                <div class="demo-viewer">
-                    <div class="demo-controls">
-                        <button class="demo-btn active" onclick="loadDemo('amazon')">Weather Data</button>
-                        <button class="demo-btn" onclick="loadDemo('earth')">Space Imagery</button>
-                        <button class="demo-btn" onclick="loadDemo('terrain')">Terrain Maps</button>
-                        <button class="demo-btn" onclick="loadDemo('genome')">Genomics</button>
-                    </div>
-                    <div class="demo-image-wrapper">
-                        <img id="demoImage" src="https://cdn.pixabay.com/photo/2013/07/18/20/26/sea-164989_1280.jpg" alt="Dataset preview">
-                        <div class="demo-overlay">
-                            <span class="demo-badge">AWS Open Data</span>
-                        </div>
-                    </div>
-                    <div class="demo-info">
-                        <p id="demoDescription">Real-time Earth observation from space. This viewer uses Sentinel-2 data—updated every 5 days.</p>
-                    </div>
-                </div>
-                
-                <div class="demo-cta">
-                    <h3>Build Your Own</h3>
-                    <p>These are real AWS dataset examples. Weather, space, terrain, genomics - all free, all S3-accessible.</p>
-                    <div class="cta-features">
-                        <div class="cta-feature">
-                            <span class="cta-icon">📊</span>
-                            <span>735 S3 datasets</span>
-                        </div>
-                        <div class="cta-feature">
-                            <span class="cta-icon">🔓</span>
-                            <span>Public access</span>
-                        </div>
-                        <div class="cta-feature">
-                            <span class="cta-icon">⚡</span>
-                            <span>API ready</span>
-                        </div>
-                    </div>
-                    <button class="cta-button" onclick="scrollToSearch()">Explore Datasets</button>
-                    <p class="cta-hint">↓ Browse below</p>
                 </div>
             </div>
         </div>
@@ -1072,53 +828,6 @@
 
         // Smooth scroll
         document.documentElement.style.scrollBehavior = 'smooth';
-
-        // Demo functionality - Real AWS datasets that actually work in browsers
-        const demoData = {
-            amazon: {
-                image: 'https://cdn.pixabay.com/photo/2013/07/18/20/26/sea-164989_1280.jpg',
-                desc: 'Example: NOAA weather data (noaa-goes17 bucket). Real satellite images updated hourly. 5+ years of data, free API access.'
-            },
-            earth: {
-                image: 'https://cdn.pixabay.com/photo/2011/12/14/12/21/orion-nebula-11107_1280.jpg',
-                desc: 'Example: NASA datasets (nasa-irsa-wise bucket). Infrared space imagery. 1.4M+ images, all public domain, S3-accessible.'
-            },
-            terrain: {
-                image: 'https://cdn.pixabay.com/photo/2016/08/01/20/34/agriculture-1562484_1280.jpg',
-                desc: 'Example: Terrain Tiles (terrain-tiles bucket). Global elevation data. Build 3D maps, hiking apps. Free GeoTIFF tiles.'
-            },
-            genome: {
-                image: 'https://cdn.pixabay.com/photo/2017/03/23/09/34/artificial-intelligence-2168736_1280.jpg',
-                desc: 'Example: 1000 Genomes (1000genomes bucket). 2,500+ human genomes. JSON + VCF files. Power genomics research.'
-            }
-        };
-
-        window.loadDemo = function(location) {
-            // Update active button
-            document.querySelectorAll('.demo-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // Update image and description with fade effect
-            const img = document.getElementById('demoImage');
-            const desc = document.getElementById('demoDescription');
-            
-            img.style.opacity = '0';
-            desc.style.opacity = '0';
-            
-            setTimeout(() => {
-                img.src = demoData[location].image;
-                desc.textContent = demoData[location].desc;
-                img.style.transition = 'opacity 0.3s ease';
-                desc.style.transition = 'opacity 0.3s ease';
-                img.style.opacity = '0.9';
-                desc.style.opacity = '1';
-            }, 150);
-        };
-
-        window.scrollToSearch = function() {
-            searchInput.focus();
-            document.querySelector('.popular-tags').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
     </script>
 </body>
 </html>

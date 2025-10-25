@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Open Data Discovery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 55vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 80px 0 40px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.6; transform: translateX(-50%) scale(1.05); }
+        }
+
+        h1 {
+            font-size: 72px;
+            font-weight: 600;
+            letter-spacing: -2.5px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #86868b;
+            font-weight: 400;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dataset-count {
+            font-size: 15px;
+            color: #007aff;
+            font-weight: 600;
+            margin-bottom: 48px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto 60px;
+            z-index: 1;
+        }
+
+        .search-wrapper {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-wrapper:focus-within {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 122, 255, 0.6);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.12),
+                        0 24px 70px rgba(0, 122, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 26px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper:focus-within .search-icon {
+            opacity: 0.7;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 22px 28px 22px 64px;
+            font-size: 19px;
+            font-weight: 400;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            outline: none;
+        }
+
+        #searchInput::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Popular Tags */
+        .popular-tags {
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .popular-tags-title {
+            font-size: 13px;
+            color: #86868b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .tags-grid {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tag-pill {
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .tag-pill:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.9);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .tag-pill.active {
+            background: #007aff;
+            color: #ffffff;
+            border-color: #007aff;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+
+        /* Results Section */
+        .results-container {
+            padding-bottom: 100px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 0 8px;
+        }
+
+        .results-count {
+            font-size: 15px;
+            color: #86868b;
+            font-weight: 500;
+        }
+
+        .results-count strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sort-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .sort-btn.active {
+            background: rgba(0, 122, 255, 0.15);
+            color: #007aff;
+            border-color: rgba(0, 122, 255, 0.3);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+            opacity: 0;
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Dataset Card */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 28px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 122, 255, 0.08) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .card-type {
+            padding: 6px 12px;
+            background: rgba(0, 122, 255, 0.12);
+            color: #007aff;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .card-region {
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #86868b;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .card-title {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            color: #ffffff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-description {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #86868b;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .card-tag {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card-provider {
+            font-size: 13px;
+            color: #86868b;
+            font-weight: 500;
+        }
+
+        .card-update {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 24px;
+            border: 3px solid rgba(255, 255, 255, 0.08);
+            border-top-color: #007aff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 17px;
+            color: #86868b;
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 100px 24px;
+            display: none;
+        }
+
+        .empty-state.active {
+            display: block;
+        }
+
+        .empty-icon {
+            font-size: 72px;
+            margin-bottom: 28px;
+            opacity: 0.25;
+        }
+
+        .empty-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+
+        .empty-text {
+            font-size: 18px;
+            color: #86868b;
+            margin-bottom: 32px;
+        }
+
+        .clear-search {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-search:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Load More */
+        .load-more-container {
+            text-align: center;
+            padding: 40px 0 60px;
+        }
+
+        .load-more {
+            padding: 14px 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .load-more:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 44px;
+                letter-spacing: -1.5px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(0, 122, 255, 0.3);
+            color: #ffffff;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>Discover Open Data</h1>
+            <p class="subtitle">Search AWS's complete catalog of public datasets</p>
+            <p class="dataset-count" id="totalCount">Loading datasets...</p>
+            
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search by keyword, topic, or organization..."
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="popular-tags">
+            <p class="popular-tags-title">Popular Topics</p>
+            <div class="tags-grid" id="popularTags"></div>
+        </div>
+
+        <div class="results-container">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount"></div>
+                <div class="sort-options">
+                    <button class="sort-btn active" data-sort="relevance">Relevance</button>
+                    <button class="sort-btn" data-sort="name">Name</button>
+                </div>
+            </div>
+            
+            <div class="loading active" id="loading">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading AWS Open Data catalog...</p>
+            </div>
+
+            <div class="grid" id="resultsGrid"></div>
+            
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">🔍</div>
+                <div class="empty-title">No datasets found</div>
+                <p class="empty-text">Try different keywords or clear your search</p>
+                <button class="clear-search" onclick="clearSearch()">Clear Search</button>
+            </div>
+
+            <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+                <button class="load-more" onclick="loadMore()">Load More Datasets</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let allDatasets = [];
+        let filteredDatasets = [];
+        let displayedCount = 0;
+        const ITEMS_PER_PAGE = 30;
+        let searchTerm = '';
+        let activeTag = null;
+        let currentSort = 'relevance';
+
+        // Elements
+        const searchInput = document.getElementById('searchInput');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const resultsCount = document.getElementById('resultsCount');
+        const emptyState = document.getElementById('emptyState');
+        const loading = document.getElementById('loading');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+        const totalCountEl = document.getElementById('totalCount');
+        const popularTagsEl = document.getElementById('popularTags');
+
+        // Load datasets from JSON
+        async function loadDatasets() {
+            try {
+                const response = await fetch('aws_open_datasets.json');
+                allDatasets = await response.json();
+                
+                // Remove duplicates and clean data
+                allDatasets = allDatasets.filter((dataset, index, self) => {
+                    // Only keep S3 Bucket types (primary resources)
+                    return dataset.Type === 'S3 Bucket' &&
+                           index === self.findIndex(d => d.Name === dataset.Name);
+                });
+                
+                filteredDatasets = [...allDatasets];
+                
+                loading.classList.remove('active');
+                totalCountEl.textContent = `${allDatasets.length.toLocaleString()} datasets available`;
+                
+                renderPopularTags();
+                renderDatasets();
+                
+                // Focus search after load
+                setTimeout(() => searchInput.focus(), 300);
+            } catch (error) {
+                console.error('Error loading datasets:', error);
+                loading.innerHTML = '<p class="loading-text">Error loading datasets. Please refresh.</p>';
+            }
+        }
+
+        // Render popular tags
+        function renderPopularTags() {
+            const tagCounts = {};
+            allDatasets.forEach(ds => {
+                if (ds.Tags && Array.isArray(ds.Tags)) {
+                    ds.Tags.forEach(tag => {
+                        if (tag !== 'aws-pds') {
+                            tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                        }
+                    });
+                }
+            });
+
+            const sortedTags = Object.entries(tagCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 12)
+                .map(([tag]) => tag);
+
+            popularTagsEl.innerHTML = sortedTags.map(tag => 
+                `<div class="tag-pill" onclick="filterByTag('${tag}')">${tag}</div>`
+            ).join('');
+        }
+
+        // Search functionality
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchTerm = e.target.value.toLowerCase().trim();
+                filterAndRender();
+            }, 300);
+        });
+
+        // Filter by tag
+        window.filterByTag = function(tag) {
+            const pills = document.querySelectorAll('.tag-pill');
+            pills.forEach(pill => {
+                if (pill.textContent === tag) {
+                    if (pill.classList.contains('active')) {
+                        pill.classList.remove('active');
+                        activeTag = null;
+                    } else {
+                        pills.forEach(p => p.classList.remove('active'));
+                        pill.classList.add('active');
+                        activeTag = tag;
+                    }
+                }
+            });
+            filterAndRender();
+        };
+
+        // Sort buttons
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSort = btn.dataset.sort;
+                renderDatasets();
+            });
+        });
+
+        // Filter and render
+        function filterAndRender() {
+            let filtered = [...allDatasets];
+
+            // Filter by search term
+            if (searchTerm) {
+                filtered = filtered.filter(ds => {
+                    const searchableText = [
+                        ds.Name,
+                        ds.Description,
+                        ds.ManagedBy,
+                        ...(ds.Tags || [])
+                    ].join(' ').toLowerCase();
+                    
+                    return searchableText.includes(searchTerm);
+                });
+            }
+
+            // Filter by active tag
+            if (activeTag) {
+                filtered = filtered.filter(ds => 
+                    ds.Tags && ds.Tags.includes(activeTag)
+                );
+            }
+
+            filteredDatasets = filtered;
+            displayedCount = 0;
+            renderDatasets();
+        }
+
+        // Render datasets
+        function renderDatasets() {
+            resultsGrid.style.opacity = '0';
+            
+            setTimeout(() => {
+                let datasetsToShow = [...filteredDatasets];
+                
+                // Sort
+                if (currentSort === 'name') {
+                    datasetsToShow.sort((a, b) => a.Name.localeCompare(b.Name));
+                }
+                
+                const endIndex = Math.min(displayedCount + ITEMS_PER_PAGE, datasetsToShow.length);
+                const newDatasets = datasetsToShow.slice(displayedCount, endIndex);
+                
+                if (displayedCount === 0) {
+                    resultsGrid.innerHTML = '';
+                }
+                
+                if (datasetsToShow.length === 0) {
+                    resultsGrid.style.display = 'none';
+                    emptyState.classList.add('active');
+                    loadMoreContainer.style.display = 'none';
+                    resultsCount.innerHTML = '<strong>0</strong> datasets';
+                } else {
+                    resultsGrid.style.display = 'grid';
+                    emptyState.classList.remove('active');
+                    
+                    newDatasets.forEach(dataset => {
+                        const card = createCard(dataset);
+                        resultsGrid.appendChild(card);
+                    });
+                    
+                    displayedCount = endIndex;
+                    
+                    const remaining = datasetsToShow.length - displayedCount;
+                    resultsCount.innerHTML = `<strong>${datasetsToShow.length.toLocaleString()}</strong> dataset${datasetsToShow.length !== 1 ? 's' : ''}`;
+                    
+                    if (remaining > 0) {
+                        loadMoreContainer.style.display = 'block';
+                        loadMoreContainer.querySelector('.load-more').textContent = 
+                            `Load More (${remaining} remaining)`;
+                    } else {
+                        loadMoreContainer.style.display = 'none';
+                    }
+                }
+                
+                resultsGrid.style.opacity = '1';
+            }, 150);
+        }
+
+        // Create card element
+        function createCard(dataset) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.onmousemove = (e) => handleMouseMove(e, card);
+            
+            // Clean provider name
+            const provider = dataset.ManagedBy ? 
+                dataset.ManagedBy.replace(/\[|\]|\(.*?\)/g, '').trim() : 
+                'AWS';
+            
+            // Get display tags (max 4)
+            const displayTags = dataset.Tags ? 
+                dataset.Tags.filter(t => t !== 'aws-pds').slice(0, 4) : 
+                [];
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-type">${dataset.Type || 'Dataset'}</div>
+                    ${dataset.Region ? `<div class="card-region">${dataset.Region}</div>` : ''}
+                </div>
+                <h3 class="card-title">${dataset.Name}</h3>
+                <p class="card-description">${dataset.Description || 'No description available'}</p>
+                ${displayTags.length > 0 ? `
+                    <div class="card-tags">
+                        ${displayTags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}
+                    </div>
+                ` : ''}
+                <div class="card-footer">
+                    <span class="card-provider">${provider}</span>
+                    ${dataset.UpdateFrequency ? `<span class="card-update">${dataset.UpdateFrequency}</span>` : ''}
+                </div>
+            `;
+            
+            card.addEventListener('click', () => showDatasetDetails(dataset));
+            
+            return card;
+        }
+
+        // Show dataset details
+        function showDatasetDetails(dataset) {
+            const details = `
+Dataset: ${dataset.Name}
+Type: ${dataset.Type}
+Region: ${dataset.Region || 'N/A'}
+Managed By: ${dataset.ManagedBy || 'N/A'}
+Update Frequency: ${dataset.UpdateFrequency || 'N/A'}
+License: ${dataset.License || 'N/A'}
+ARN: ${dataset.ARN || 'N/A'}
+${dataset.Documentation ? '\nDocumentation: ' + dataset.Documentation : ''}
+            `.trim();
+            
+            alert(details);
+        }
+
+        // Mouse move effect
+        function handleMouseMove(e, card) {
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            card.style.setProperty('--mouse-x', `${x}%`);
+            card.style.setProperty('--mouse-y', `${y}%`);
+        }
+
+        // Load more
+        window.loadMore = function() {
+            renderDatasets();
+        };
+
+        // Clear search
+        window.clearSearch = function() {
+            searchInput.value = '';
+            searchTerm = '';
+            activeTag = null;
+            document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+            filterAndRender();
+            searchInput.focus();
+        };
+
+        // Initialize
+        loadDatasets();
+
+        // Smooth scroll
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+</html>
